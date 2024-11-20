@@ -15,6 +15,10 @@ namespace WebStore.Controllers
         // GET: Product
         public ActionResult Index()
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
             var products = db.Product.Include(p => p.Category).ToList();
             return View(products);
         }
@@ -22,6 +26,10 @@ namespace WebStore.Controllers
         // GET: Product/Create
         public ActionResult Create()
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
             ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName");
             return View();
         }
@@ -67,6 +75,10 @@ namespace WebStore.Controllers
         // GET: Product/Edit/5
         public ActionResult Edit(int id)
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
             var product = db.Product.Find(id);
             if (product == null)
             {

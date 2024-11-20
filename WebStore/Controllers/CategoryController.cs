@@ -15,21 +15,38 @@ namespace WebStore.Controllers
         // GET: Category
         public ActionResult Index()
         {
-            var categories = db.Category.ToList();
-            return View(categories);
+            if (Session["Role"] != null && Session["Role"].ToString() == "Admin")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "ErrorController"); 
+            }
         }
 
         // GET: Category/Create
         public ActionResult Create()
         {
-            return View();
+            if (Session["Role"] != null && Session["Role"].ToString() == "Admin")
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Error");
+            }
         }
 
         // POST: Category/Create
         [HttpPost]
         public ActionResult Create(Category category)
         {
-            if (ModelState.IsValid)
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
+            else if (ModelState.IsValid)
             {
                 db.Category.Add(category);
                 db.SaveChanges();

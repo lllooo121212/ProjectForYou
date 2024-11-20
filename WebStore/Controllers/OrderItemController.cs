@@ -12,6 +12,10 @@ namespace WebStore.Controllers
         // GET: OrderItem
         public ActionResult Index()
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
             // Retrieve all OrderItems
             var orderItems = db.OrderItem.Include("User").Include("Voucher").ToList();
             return View(orderItems);
@@ -20,6 +24,10 @@ namespace WebStore.Controllers
         // GET: OrderItem/OrderDetails/5
         public ActionResult OrderDetails(int id)
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Index", "Error");
+            }
             // Find the OrderItem by id and include related OrderDetails and Vouchers
             var orderItem = db.OrderItem
                 .Include(oi => oi.OrderDetail.Select(od => od.Voucher)) // Include the related OrderDetails and Vouchers
